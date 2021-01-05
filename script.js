@@ -1,13 +1,3 @@
-// let listaStorage = [
-    // {id: 1,
-    // nombre: 'Mili',
-    // edad: '1993-01-27',
-    // sexo: 'femenino',
-    // mail: 'mmiligaleano@gmail.com'}
-// ];
-
-// localStorage.setItem('listaUsuarios', JSON.stringify(listaStorage));
-
 // fecha actual
 let hoy = new Date();
 let dia = hoy.getDate();
@@ -53,7 +43,6 @@ function cerrarModal(x){
 // nuevo usuario
 function guardarUsuario(){
     let listaStorage = JSON.parse(localStorage.getItem('listaUsuarios'));
-    console.log(listaStorage);
     let usNombre = document.getElementById('nombre').value;
     let usEdad = document.getElementById('fechanac').value;
     let usSexo;
@@ -74,7 +63,6 @@ function guardarUsuario(){
     } else {
     newUsuario(listaStorage.length+1, (usNombre[0].toUpperCase() + usNombre.slice(1)), usEdad, usSexo, usMail);
     cerrarModal('modalForm');
-    console.log(listaStorage);
     cargarUsuarios(0,5);
     paginado();
     }
@@ -106,10 +94,12 @@ function cargarUsuarios(x,y) {
     // pagina actual
     let paginas = document.getElementsByClassName('pagina');
     let actual = x/5;
+    if (paginas.length !== 0) {
     for (let i = 0; i < paginas.length; i++) {
         paginas[i].setAttribute('class', 'pagina');
     }
     paginas[actual].setAttribute('class', 'pagina actual');
+    }
 }
 
 // modal confirmación eliminar
@@ -125,7 +115,6 @@ function modalEliminar(x) {
 function eliminarUsuario(x) {
     let listaStorage = JSON.parse(localStorage.getItem('listaUsuarios'));
     let usuarioAEliminar = x.id[x.id.length-1];
-    console.log(listaStorage[usuarioAEliminar].nombre);
     listaStorage.splice( usuarioAEliminar, 1 );
             for (let i = usuarioAEliminar; i < listaStorage.length; i++) {
             listaStorage[i].id =  listaStorage[i].id - 1;
@@ -179,17 +168,12 @@ function editarUsuario(x) {
 // agregar paginado
 function paginado() {
     let listaStorage = JSON.parse(localStorage.getItem('listaUsuarios'));
-        if (listaStorage.length > 5) {
-        document.getElementsByClassName('pagina')[0].style.display = 'flex';
-        document.getElementsByClassName('pagina')[0].setAttribute("onclick", "cargarUsuarios(0,5);");
-        document.getElementsByClassName('pagina')[1].style.display = 'flex';
-        document.getElementsByClassName('pagina')[1].setAttribute("onclick", "cargarUsuarios(5,10);");
-        if (listaStorage.length > 10) {
-            let numdepags = Math.ceil(listaStorage.length/5);
-            let padre = document.getElementById('paginado');
+    let padre = document.getElementById('paginado');
                     while (padre.firstChild) {
                         padre.removeChild(padre.firstChild);
                         }
+        if (listaStorage.length > 5) {
+            let numdepags = Math.ceil(listaStorage.length/5);
                 for (let i = 0; i <  Math.ceil(numdepags); i++) {
                     let pagnueva = document.createElement('div');
                     pagnueva.setAttribute("class", "pagina");
@@ -201,7 +185,6 @@ function paginado() {
                 }
                 document.getElementById('pag0').setAttribute('class', 'pagina actual');
         } 
-    }
 }
 
 // calcular edad usuario
@@ -219,7 +202,6 @@ function calcularEdad(x) {
     } else {
         aniosUsuario = anio - fechaUsuario[0];
     }
-    console.log(aniosUsuario);
     return aniosUsuario;
 }
 
