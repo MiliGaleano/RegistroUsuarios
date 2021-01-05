@@ -1,7 +1,7 @@
 let listaUsuarios = [
     {id: 1,
     nombre: 'mili',
-    edad: 1993-01-27,
+    edad: '1993-01-27',
     sexo: 'femenino',
     mail: 'mmiligaleano@gmail.com'}
 ];
