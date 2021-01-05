@@ -16,8 +16,14 @@ function newUsuario(id, nombre, edad, sexo, mail){
         sexo: sexo,
         mail: mail
     };
+    if (listaStorage !== null) {
     listaStorage.push(usuario);
     localStorage.setItem('listaUsuarios', JSON.stringify(listaStorage));
+    } else {
+        let listaUsuarios = [];
+        listaUsuarios.push(usuario);
+        localStorage.setItem('listaUsuarios', JSON.stringify(listaUsuarios));
+    }
 }
 
 // abrir modal
@@ -61,7 +67,12 @@ function guardarUsuario(){
     } else if (usNombre === '' || usEdad === '' || usSexo === undefined || usMail === '') {
         alert('Completar todos los campos');
     } else {
-    newUsuario(listaStorage.length+1, (usNombre[0].toUpperCase() + usNombre.slice(1)), usEdad, usSexo, usMail);
+        if (listaStorage !== null) {
+        newUsuario(listaStorage.length+1, (usNombre[0].toUpperCase() + usNombre.slice(1)), usEdad, usSexo, usMail);
+        }
+        else {
+        newUsuario(1, (usNombre[0].toUpperCase() + usNombre.slice(1)), usEdad, usSexo, usMail);
+        }
     cerrarModal('modalForm');
     cargarUsuarios(0,5);
     paginado();
@@ -71,34 +82,36 @@ function guardarUsuario(){
 // imprimir lista en pantalla
 function cargarUsuarios(x,y) {
     let listaStorage = JSON.parse(localStorage.getItem('listaUsuarios'));
-    for (let a = 0; a < 5; a++) {
-        document.getElementById('usuario'+a).style.display = 'none';  
-    }
-    for (let i = x; i < y; i++) {
-                if (listaStorage[i] === undefined) {  
-                break;
-            }
-            calcularEdad(listaStorage[i].edad);
-            document.getElementById('usuario'+(i-x)).style.display = 'flex';
-            let columnasUsuario = document.getElementsByClassName('us'+(i-x));
-                for (let j = 0; j < columnasUsuario.length; j++) {
-                    columnasUsuario[j].innerHTML = listaStorage[i][Object.keys(listaStorage[0])[j]];
-                }  
-            document.getElementsByClassName('columna3')[i+(1-x)].innerHTML= aniosUsuario;
-            let botonesUsuario = document.getElementsByClassName('boton'+(i-x));
-            botonesUsuario[0].setAttribute("onclick", "abrirModal(this)");
-            botonesUsuario[0].setAttribute("id", "editar-"+listaStorage[i].id);
-            botonesUsuario[1].setAttribute("onclick", "modalEliminar(this)");
-            botonesUsuario[1].setAttribute("id", "borrar-"+listaStorage[i].id);
-    }
-    // pagina actual
-    let paginas = document.getElementsByClassName('pagina');
-    let actual = x/5;
-    if (paginas.length !== 0) {
-    for (let i = 0; i < paginas.length; i++) {
-        paginas[i].setAttribute('class', 'pagina');
-    }
-    paginas[actual].setAttribute('class', 'pagina actual');
+    if (listaStorage !== null) {
+        for (let a = 0; a < 5; a++) {
+            document.getElementById('usuario'+a).style.display = 'none';  
+        }
+        for (let i = x; i < y; i++) {
+                    if (listaStorage[i] === undefined) {  
+                    break;
+                }
+                calcularEdad(listaStorage[i].edad);
+                document.getElementById('usuario'+(i-x)).style.display = 'flex';
+                let columnasUsuario = document.getElementsByClassName('us'+(i-x));
+                    for (let j = 0; j < columnasUsuario.length; j++) {
+                        columnasUsuario[j].innerHTML = listaStorage[i][Object.keys(listaStorage[0])[j]];
+                    }  
+                document.getElementsByClassName('columna3')[i+(1-x)].innerHTML= aniosUsuario;
+                let botonesUsuario = document.getElementsByClassName('boton'+(i-x));
+                botonesUsuario[0].setAttribute("onclick", "abrirModal(this)");
+                botonesUsuario[0].setAttribute("id", "editar-"+listaStorage[i].id);
+                botonesUsuario[1].setAttribute("onclick", "modalEliminar(this)");
+                botonesUsuario[1].setAttribute("id", "borrar-"+listaStorage[i].id);
+        }
+        // pagina actual
+        let paginas = document.getElementsByClassName('pagina');
+        let actual = x/5;
+        if (paginas.length !== 0) {
+        for (let i = 0; i < paginas.length; i++) {
+            paginas[i].setAttribute('class', 'pagina');
+        }
+        paginas[actual].setAttribute('class', 'pagina actual');
+        }
     }
 }
 
@@ -168,6 +181,7 @@ function editarUsuario(x) {
 // agregar paginado
 function paginado() {
     let listaStorage = JSON.parse(localStorage.getItem('listaUsuarios'));
+    if (listaStorage !== null) {
     let padre = document.getElementById('paginado');
                     while (padre.firstChild) {
                         padre.removeChild(padre.firstChild);
@@ -185,6 +199,7 @@ function paginado() {
                 }
                 document.getElementById('pag0').setAttribute('class', 'pagina actual');
         } 
+    }
 }
 
 // calcular edad usuario
@@ -207,9 +222,11 @@ function calcularEdad(x) {
 
 // comprobar email
 function comprobarEmail(x,y){
-    for (let i = 0; i < x.length; i++) {
-        if (x[i].mail === y) 
-        return false
+    if (x !== null) {
+        for (let i = 0; i < x.length; i++) {
+            if (x[i].mail === y) 
+            return false
+        }
     }
 }
 
