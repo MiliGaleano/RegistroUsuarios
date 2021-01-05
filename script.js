@@ -1,12 +1,12 @@
-let listaUsuarios = [
-    {id: 1,
-    nombre: 'mili',
-    edad: '1993-01-27',
-    sexo: 'femenino',
-    mail: 'mmiligaleano@gmail.com'}
-];
+// let listaStorage = [
+    // {id: 1,
+    // nombre: 'Mili',
+    // edad: '1993-01-27',
+    // sexo: 'femenino',
+    // mail: 'mmiligaleano@gmail.com'}
+// ];
 
-localStorage.setItem('listaUsuarios', JSON.stringify(listaUsuarios));
+// localStorage.setItem('listaUsuarios', JSON.stringify(listaStorage));
 
 // fecha actual
 let hoy = new Date();
@@ -53,6 +53,7 @@ function cerrarModal(x){
 // nuevo usuario
 function guardarUsuario(){
     let listaStorage = JSON.parse(localStorage.getItem('listaUsuarios'));
+    console.log(listaStorage);
     let usNombre = document.getElementById('nombre').value;
     let usEdad = document.getElementById('fechanac').value;
     let usSexo;
@@ -66,6 +67,8 @@ function guardarUsuario(){
     let usMail = document.getElementById('mail').value;
     if (usMail.includes('@') === false){
         alert('Email inválido');
+    } else if (comprobarEmail(listaStorage,usMail) === false ) {
+        alert('Email ya registrado');
     } else if (usNombre === '' || usEdad === '' || usSexo === undefined || usMail === '') {
         alert('Completar todos los campos');
     } else {
@@ -160,6 +163,8 @@ function editarUsuario(x) {
     if (usMail !== "") {
         if (usMail.includes('@') === true){
             listaStorage[usuarioAEditar-1].mail = usMail;
+        } else if (comprobarEmail(listaStorage,usMail) === false ) {
+            alert('Email ya registrado');
         } else {
             alert('Email inválido');
         }
@@ -216,6 +221,14 @@ function calcularEdad(x) {
     }
     console.log(aniosUsuario);
     return aniosUsuario;
+}
+
+// comprobar email
+function comprobarEmail(x,y){
+    for (let i = 0; i < x.length; i++) {
+        if (x[i].mail === y) 
+        return false
+    }
 }
 
 cargarUsuarios(0,5);
